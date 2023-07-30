@@ -41,10 +41,8 @@ class OAuthEnumerator:
                     scopes=[scope],
                 )
                 creds = creds.with_subject(self.user_email)
-
                 # Create an access token
                 creds.refresh(Request())
-
                 # Validate the access token using tokeninfo API
                 token_info_url = f"https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={creds.token}"
                 response = requests.get(token_info_url)

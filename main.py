@@ -1,10 +1,10 @@
 import yaml
 import argparse
 from google.auth.credentials import Credentials
-from gcp_sa_enum import ServiceAccountEnumerator
+from src.gcp_sa_enum import ServiceAccountEnumerator
 from googleapiclient.errors import HttpError
 from google.auth.exceptions import RefreshError
-import oauth_scope_enumrator
+from src import oauth_scope_enumrator
 import os
 import time
 
@@ -19,7 +19,7 @@ with open(args.config, 'r') as file:
 OAUTH_TOKEN = config.get('oauth_token')
 USER_EMAIL = config.get('user_email')
 
-SCOPES_FILE = 'oauth_scopes.txt'  # replace with your scopes file path
+SCOPES_FILE = 'src/oauth_scopes.txt'  # replace with your scopes file path
 KEY_FOLDER = 'SA_private_keys'
 
 
@@ -73,7 +73,7 @@ if __name__ == "__main__":
         enumerator = ServiceAccountEnumerator(credentials, USER_EMAIL)
         print("\n[+] Enumerating GCP Resources: Projects and Service Accounts...")
         enumerator.list_service_accounts()
-        oauth_scope_enumrator = oauth_scope_enumrator.OAuthEnumerator(USER_EMAIL,SCOPES_FILE,KEY_FOLDER)
+        oauth_scope_enumrator = oauth_scope_enumrator.OAuthEnumerator(USER_EMAIL, SCOPES_FILE, KEY_FOLDER)
         print("\n[+] Enumerating OAuth scopes and private key access tokens... ")
         oauth_scope_enumrator.run()
         results()
