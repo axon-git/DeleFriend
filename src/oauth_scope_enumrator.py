@@ -8,12 +8,13 @@ KEY_FOLDER = 'SA_private_keys'
 
 class OAuthEnumerator:
     """ Creates access token to each private key and OAuth scope and validate them"""
-    def __init__(self, user_email, scopes_file, key_folder):
+    def __init__(self, user_email, scopes_file, key_folder,verbose=False):
         self.user_email = user_email
         self.scopes_file = scopes_file
         self.key_folder = key_folder
         self.scopes = self.read_scopes_from_file()
         self.valid_results = {}
+        self.verbose = verbose
 
     def get_valid_results(self):
         return self.valid_results
@@ -50,15 +51,13 @@ class OAuthEnumerator:
                 if response.status_code == 200:
                     valid_scopes.append(scope)
                     print(f"\033[92m [+] Token is valid for {json_path} with scope {scope} \033[0m")
-                else:
-                    print(f"[-] Token is not valid for {json_path} with scope {scope}")
-
 
 
             except DefaultCredentialsError:
                 print("The service account file is not valid or doesn't exist.")
             except RefreshError as e:
-                print(f"[-] Invalid or expired token with scope {scope}")
+                if self.verbose:
+                    print(f"[-] Invalid or expired token with scope {scope}")
             self.valid_results[json_path] = valid_scopes
 
     def run(self):

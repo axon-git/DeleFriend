@@ -11,6 +11,7 @@ import time
 
 parser = argparse.ArgumentParser(description="DeleFriend Tool")
 parser.add_argument('-c', '--config', type=str, required=True, help="Path to the GCP IAM configuration file")
+parser.add_argument('-v', '--verbose', action='store_true', help="Enable verbose/debugging mode")
 args = parser.parse_args()
 # load configuration
 with open(args.config, 'r') as file:
@@ -19,7 +20,7 @@ with open(args.config, 'r') as file:
 OAUTH_TOKEN = config.get('oauth_token')
 USER_EMAIL = config.get('user_email')
 
-SCOPES_FILE = 'src/oauth_scopes.txt'  # replace with your scopes file path
+SCOPES_FILE = 'src/oauth_scopes.txt'  #  scopes file
 KEY_FOLDER = 'SA_private_keys'
 
 
@@ -70,10 +71,10 @@ if __name__ == "__main__":
     try:
         info()
         credentials = CustomCredentials(OAUTH_TOKEN)
-        enumerator = ServiceAccountEnumerator(credentials, USER_EMAIL)
+        enumerator = ServiceAccountEnumerator(credentials, USER_EMAIL, verbose=args.verbose)
         print("\n[+] Enumerating GCP Resources: Projects and Service Accounts...")
         enumerator.list_service_accounts()
-        oauth_scope_enumrator = oauth_scope_enumrator.OAuthEnumerator(USER_EMAIL, SCOPES_FILE, KEY_FOLDER)
+        oauth_scope_enumrator = oauth_scope_enumrator.OAuthEnumerator(USER_EMAIL, SCOPES_FILE, KEY_FOLDER, verbose=args.verbose)
         print("\n[+] Enumerating OAuth scopes and private key access tokens... ")
         oauth_scope_enumrator.run()
         results()
