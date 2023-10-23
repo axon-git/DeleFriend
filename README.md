@@ -52,7 +52,3 @@ python main.py -c config.yaml  —v
 ## Contribution 
 We are encouraged security researchers and any cloud enthusiasts to contribute to the project and assist with the tool development. 
 
-
-## Future Plans:
-- Support service accounts identities as an initial vector - we understand that compromised service accounts are common in red team engagements, and as a result, will add support for them in the next versions of the tool.
-- Support custom rule enumration - we understand that custom roles have a huge potential to contain permission misconfigurations of serviceAccountKeys.create, and as a result, will add support for enumerating custom roles as well in the next versions of the tool.

@@ -15,6 +15,7 @@ class OAuthEnumerator:
         self.scopes = self.read_scopes_from_file()
         self.valid_results = {}
         self.verbose = verbose
+        self.confirmed_dwd_keys = []  # Keep track of keys with DWD
 
     def get_valid_results(self):
         return self.valid_results
@@ -51,6 +52,10 @@ class OAuthEnumerator:
                 if response.status_code == 200:
                     valid_scopes.append(scope)
                     print(f"\033[92m [+] Token is valid for {json_path} with scope {scope} \033[0m")
+                    # track keys with DWD (for cleaning of the others)
+                    if json_path not in self.confirmed_dwd_keys:
+                        self.confirmed_dwd_keys.append(json_path)
+
 
 
             except DefaultCredentialsError:
@@ -59,6 +64,18 @@ class OAuthEnumerator:
                 if self.verbose:
                     print(f"[-] Invalid or expired token with scope {scope}")
             self.valid_results[json_path] = valid_scopes
+
+    def delete_keys_without_dwd(self):
+        """ Delete SA keys which found without DWD from local folder"""
+        for key_path in os.listdir(self.key_folder):
+            full_path = os.path.join(self.key_folder, key_path)
+            print("[!] Clearing private keys without DWD enabled ...")
+            if full_path not in self.confirmed_dwd_keys:
+                try:
+                    os.remove(full_path)
+                    print(f"[!] Deleted service account key without DWD: {full_path}")
+                except OSError as e:
+                    print(f"Error deleting {full_path}: {e}")
 
     def run(self):
         if not self.scopes:
