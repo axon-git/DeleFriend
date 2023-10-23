@@ -47,6 +47,7 @@ def results():
 
     filename = f'results_{timestamp}.txt'
     filepath = os.path.join(result_folder, filename)
+    print(f"\n\n[+] Saving results to results/{filename} ...")
 
     with open(filepath, 'w') as f:
         valid_results = oauth_scope_enumrator.get_valid_results()
@@ -75,8 +76,9 @@ if __name__ == "__main__":
         print("\n[+] Enumerating GCP Resources: Projects and Service Accounts...")
         enumerator.list_service_accounts()
         oauth_scope_enumrator = oauth_scope_enumrator.OAuthEnumerator(USER_EMAIL, SCOPES_FILE, KEY_FOLDER, verbose=args.verbose)
-        print("\n[+] Enumerating OAuth scopes and private key access tokens... ")
+        print("\n[+] Enumerating OAuth scopes and private key access tokens... (it might take a while) ")
         oauth_scope_enumrator.run()
+        oauth_scope_enumrator.delete_keys_without_dwd()
         results()
     except HttpError as e:
         if e.resp.status == 401 and b"ACCESS_TOKEN_TYPE_UNSUPPORTED" in e.content:

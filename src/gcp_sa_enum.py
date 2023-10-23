@@ -50,7 +50,14 @@ class ServiceAccountEnumerator:
 
     def check_permission(self, role):
         """ Check if the target role has iam.serviceAccountKeys.create permission """
-        request = self.iam_service.roles().get(name=role)
+
+        # custom role validation - custom roles starting with the following format projects/<project_name>
+        if "projects/" in role:
+            request = self.iam_service.projects().roles().get(name=role)
+        # basic or predefined roles
+        else:
+            request = self.iam_service.roles().get(name=role)
+
         response = request.execute()
         permissions = response.get('includedPermissions', [])
         return 'iam.serviceAccountKeys.create' in permissions
