@@ -78,7 +78,8 @@ if __name__ == "__main__":
         oauth_scope_enumrator = oauth_scope_enumrator.OAuthEnumerator(USER_EMAIL, SCOPES_FILE, KEY_FOLDER, verbose=args.verbose)
         print("\n[+] Enumerating OAuth scopes and private key access tokens... (it might take a while) ")
         oauth_scope_enumrator.run()
-        oauth_scope_enumrator.delete_keys_without_dwd()
+        confirmed_dwd_keys = oauth_scope_enumrator.confirmed_dwd_keys
+        enumerator.key_creator.delete_keys_without_dwd(confirmed_dwd_keys)
         results()
     except HttpError as e:
         if e.resp.status == 401 and b"ACCESS_TOKEN_TYPE_UNSUPPORTED" in e.content:
