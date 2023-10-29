@@ -33,6 +33,14 @@ class OAuthEnumerator:
             print(f"An error occurred while reading the scopes file: {e}")
             return []
 
+    def total_jwt_combinations(self):
+        """ calculate total combinations of JWT based on the number of enumerated OAuth scopes and GCP private keys pairs
+        (oauth_scopes.txt number * private key pairs)"""
+        num_scopes = len(self.scopes)
+        num_keys = len(os.listdir(self.key_folder))
+        return num_scopes * num_keys
+
+
     def validate_token(self, json_path):
         valid_scopes = []
         for scope in self.scopes:
@@ -56,8 +64,6 @@ class OAuthEnumerator:
                     if json_path not in self.confirmed_dwd_keys:
                         self.confirmed_dwd_keys.append(json_path)
 
-
-
             except DefaultCredentialsError:
                 print("The service account file is not valid or doesn't exist.")
             except RefreshError as e:
@@ -70,6 +76,8 @@ class OAuthEnumerator:
             print("No scopes to check. Exiting.")
             exit()
 
+        total_combinations = self.total_jwt_combinations()
+        print(f"  \t [+] Total of JWT combinations to enumerate: {total_combinations}!")
         for json_file in os.listdir(self.key_folder):
             json_path = os.path.join(self.key_folder, json_file)
             if os.path.exists(json_path):
