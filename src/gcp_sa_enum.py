@@ -1,16 +1,31 @@
+import requests
 from googleapiclient.discovery import build
 from src.private_key_creator import PrivateKeyCreator
 
 
+
 class ServiceAccountEnumerator:
     """Enumerate GCP Projects and Service Accounts and find roles with iam.serviceAccountKeys.create permission  """
-    def __init__(self, credentials, user_email, verbose=False):
+    def __init__(self, credentials, verbose=False):
         self.credentials = credentials
-        self.user_email = user_email
+        self.user_email = self.get_iam_email_from_token()
         self.iam_service = build('iam', 'v1', credentials=self.credentials)
         self.resource_manager_service = build('cloudresourcemanager', 'v1', credentials=self.credentials)
         self.key_creator = PrivateKeyCreator(credentials)
         self.verbose = verbose
+
+    def get_iam_email_from_token(self):
+        """Get the email associated with the access token in order to check for the user relevant role and permissions"""
+        try:
+            response = requests.get(
+                'https://www.googleapis.com/oauth2/v1/userinfo?alt=json',
+                headers={'Authorization': f'Bearer {self.credentials.token}'}
+            )
+            response.raise_for_status()
+            return response.json().get('email')
+        except requests.RequestException as e:
+            print(f"Error fetching user info: {e}")
+            return None
 
     def get_service_account_roles(self, service_account):
         request = self.iam_service.projects().serviceAccounts().getIamPolicy( # Get roles of the target SA

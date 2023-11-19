@@ -5,6 +5,7 @@ from src.gcp_sa_enum import ServiceAccountEnumerator
 from googleapiclient.errors import HttpError
 from google.auth.exceptions import RefreshError
 from src import oauth_scope_enumrator
+from src.domain_users_enum import DomainUserEnumerator
 import os
 import time
 
@@ -18,7 +19,7 @@ with open(args.config, 'r') as file:
     config = yaml.safe_load(file)
 
 OAUTH_TOKEN = config.get('oauth_token')
-USER_EMAIL = config.get('user_email')
+WORKSPACE_USER_EMAIL = config.get('workspace_user_email')
 
 SCOPES_FILE = 'src/oauth_scopes.txt'  #  scopes file
 KEY_FOLDER = 'SA_private_keys'
@@ -72,14 +73,20 @@ if __name__ == "__main__":
     try:
         info()
         credentials = CustomCredentials(OAUTH_TOKEN)
-        enumerator = ServiceAccountEnumerator(credentials, USER_EMAIL, verbose=args.verbose)
+        enumerator = ServiceAccountEnumerator(credentials, verbose=args.verbose)
         print("\n[+] Enumerating GCP Resources: Projects and Service Accounts...")
         enumerator.list_service_accounts()
-        oauth_scope_enumrator = oauth_scope_enumrator.OAuthEnumerator(USER_EMAIL, SCOPES_FILE, KEY_FOLDER, verbose=args.verbose)
-        print("\n[+] Enumerating OAuth scopes and private key access tokens... (it might take a while) ")
+
+        domain_user_enumerator = DomainUserEnumerator(enumerator)
+        print("\n[+] Enumerating unique org domain and users on GCP (ONE user per domain) ...")
+        domain_user_enumerator.print_unique_domain_users()
+
+        oauth_scope_enumrator = oauth_scope_enumrator.OAuthEnumerator(enumerator, WORKSPACE_USER_EMAIL, SCOPES_FILE, KEY_FOLDER, verbose=args.verbose)
+        print("\n[+] Enumerating OAuth scopes and private key access tokens... (it might take a while based on the number of the JWT combinations) ")
         oauth_scope_enumrator.run()
         confirmed_dwd_keys = oauth_scope_enumrator.confirmed_dwd_keys
         enumerator.key_creator.delete_keys_without_dwd(confirmed_dwd_keys)
+
         results()
     except HttpError as e:
         if e.resp.status == 401 and b"ACCESS_TOKEN_TYPE_UNSUPPORTED" in e.content:
