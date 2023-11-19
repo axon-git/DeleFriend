@@ -1,2 +1,3 @@
-oauth_token: "ya29"
-user_email: ""
+bearer_access_token: "ya29.a0AfB_byAqJqwhrdICHDuboC_iG5EIjDY6RabfbhuXvLV-Q5iSEUNgvj0XqRDaUKWz-RHJyk3ZWUhEg7DddfsSpMTRViUspGOhi3jheezbhxuTyIY5sz6UxfoV0OR1y49EWXfqBpGMxwg96bBsc9PwCIYHlyql0H7vQl1Ue3b8VGGBaCgYKAR0SARISFQHGX2MiQn..."
+# OPTIONAL parameter of a target workspace user (use only in case you know at least one valid workspace email, if not - the tool will automatically find for you)
+#workspace_user_email: "user@domain.com"

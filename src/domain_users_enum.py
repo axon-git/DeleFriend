@@ -1,5 +1,6 @@
 
 class DomainUserEnumerator:
+    """ Find target Workspace users using GCP projects role enumeration. returns one email address per disitnct domain org """
     def __init__(self, gcp_project_enumerator):
         self.gcp_project_enumerator = gcp_project_enumerator
 
