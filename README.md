@@ -6,6 +6,9 @@
        By Axon - Hunters.security
 ```
 
+  ![image text](https://github.com/axon-git/DeleFriend/blob/main/DeleFriend%2022.11%20v2%20concept.jpg)
+
+
 ## Description
 Delefriend is a proof-of-concept red team tool to automatically find and abuse existing GCP service accounts with domain-wide delegation (DWD) on Google Workspace by smartly fuzzing all of the existing JWT combinations that are relevant to the initial GCP identity. A compromised GCP service account key with DWD enabled can be used to perform API calls on all of the identities in the target Workspace domain. 
 
