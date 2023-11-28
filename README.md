@@ -29,7 +29,7 @@ Delefriend was created as a proof-of-concept tool to increase awareness around O
 ### Root Cause
 When a new domain delegation configuration is created, it is defined by the service account resource identification (the OAuth ID) and not by the specific private key/s attached to the SA identity. This means that in case an IAM identity has access to create new private keys to a relevant GCP service account resource that has existing domain-wide delegation permissions, a fresh private key can be abused to perform API calls to Google Workspace on behalf of other identities in the domain. The POC provides a programmatic and elegant approach to finding all of the existing delegations based on the permissions of the provided GCP IAM identity. 
 
-For a detailed technical deep dive into the feature, check out our blog post: ………..
+For a detailed technical deep dive into the feature, check out our blog post: https://www.hunters.security/en/blog/delefriend-a-newly-discovered-design-flaw-in-domain-wide-delegation-could-leave-google-workspace-vulnerable-for-takeover
 
 
 ## How to use
