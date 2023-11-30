@@ -18,7 +18,7 @@ args = parser.parse_args()
 with open(args.config, 'r') as file:
     config = yaml.safe_load(file)
 
-OAUTH_TOKEN = config.get('oauth_token')
+OAUTH_TOKEN = config.get('bearer_access_token')
 WORKSPACE_USER_EMAIL = config.get('workspace_user_email')
 
 SCOPES_FILE = 'src/oauth_scopes.txt'  #  scopes file
