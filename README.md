@@ -39,8 +39,8 @@ DeleFriend uses Poetry to allow easy and fast dependency installation. 
 ```
 git clone git@github.com:axon-git/DeleFriend.git <your-local-repos-dir>/DeleFriend
 cd <your-local-repos-dir>/DeleFriend
-poetry shell 
 poetry install
+poetry shell
 ```
 
 - Configure the GCP access token and target workspace user in the `config.yaml` file.
