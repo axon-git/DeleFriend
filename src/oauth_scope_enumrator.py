@@ -65,7 +65,7 @@ class OAuthEnumerator:
         return jwt_objects
 
     def token_validator(self, jwt_objects):
-        """ Validate access tokens for each JWT object combination """
+        """ Validate access tokens for each JWT object combination  """
         for json_path, user_email, scope, creds in jwt_objects:
             try:
                 creds.refresh(Request())

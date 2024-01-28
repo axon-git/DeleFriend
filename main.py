@@ -18,7 +18,7 @@ args = parser.parse_args()
 with open(args.config, 'r') as file:
     config = yaml.safe_load(file)
 
-OAUTH_TOKEN = config.get('bearer_access_token')
+BEARER_ACCESS_TOKEN = config.get('bearer_access_token')
 WORKSPACE_USER_EMAIL = config.get('workspace_user_email')
 
 SCOPES_FILE = 'src/oauth_scopes.txt'  #  scopes file
@@ -66,16 +66,17 @@ def info():
         ┳┓  ┓  ┏┓  •     ┓
         ┃┃┏┓┃┏┓┣ ┏┓┓┏┓┏┓┏┫
         ┻┛┗ ┗┗ ┻ ┛ ┗┗ ┛┗┗┻
+        Ver 1.2
                          By Axon - Hunters.security""")
 
 
 if __name__ == "__main__":
     try:
         info()
-        credentials = CustomCredentials(OAUTH_TOKEN)
+        credentials = CustomCredentials(BEARER_ACCESS_TOKEN)
         enumerator = ServiceAccountEnumerator(credentials, verbose=args.verbose)
         print("\n[+] Enumerating GCP Resources: Projects and Service Accounts...")
-        enumerator.list_service_accounts()
+        enumerator.enumerate_service_accounts()
 
         domain_user_enumerator = DomainUserEnumerator(enumerator)
         print("\n[+] Enumerating unique org domain and users on GCP (ONE user per domain) ...")
